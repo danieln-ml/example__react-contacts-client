@@ -1,4 +1,5 @@
 import React from "react";
+import ContactsApi from "../services/ContactsApi"
 
 export default class App extends React.Component {
 
@@ -8,23 +9,32 @@ export default class App extends React.Component {
       user: {
         password: '',
         email: ''
-      }
+      },
+      userCreated: null
     }
   }
 
   createUser(user) {
-    console.log('creating ->', user)
+    ContactsApi.createUser(user).then(
+    (resp) => {
+      const createdUser = Object.assign({}, resp.data, user)
+      this.setState({
+        userCreated: JSON.stringify(createdUser)
+      })
+    },
+    (err) => {
+      alert(err)
+    })
   }
 
   render() {
 
-    const { user } = this.state
+    const { user, userCreated } = this.state
 
     const handleChange = (e) => {
       const { name, value } = e.target
       user[name] = value
       this.setState({ user: user })
-      console.log(this.state.user)
     }
 
     const handleSubmit = (e) => {
@@ -34,6 +44,7 @@ export default class App extends React.Component {
 
     return (
       <form onSubmit={handleSubmit}>
+        { userCreated }
         <h3>Create User</h3>
         <div class="form-group">
           <label>email</label>
