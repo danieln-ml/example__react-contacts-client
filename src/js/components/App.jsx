@@ -1,16 +1,27 @@
-import React from "react";
-import Api from "../services/ContactsApi"
-import UserSession from "../services/UserSession"
+import React from "react"
+
+import ContactLayout from "./Layouts/ContactLayout.jsx"
 import UserLayout from "./Layouts/UserLayout.jsx"
-import ContactsLayout from "./Layouts/ContactsLayout.jsx"
+import UserStorage from "../services/UserSession.js"
+import Api from "../services/ContactsApi"
+import Header from "./Base/Header.jsx"
 
 export default class App extends React.Component {
 
   constructor(props) {
     super(props)
+    let hasUserSession = !!UserStorage.getUser()
     this.state = {
-      hasUserSession: !!UserSession.getUser(),
-      currentPage: 'Login'
+      hasUserSession: hasUserSession,
+      currentPage: 'Login',
+      user: hasUserSession ? UserSession.getUser() : this.emptyUser()
+    }
+  }
+
+  emptyUser() {
+    return {
+      email: '',
+      password: ''
     }
   }
 
@@ -23,16 +34,10 @@ export default class App extends React.Component {
           email: user.email,
           password: user.password
         })
-        this.setState({hasUserSession: !!UserSession.getUser()})
+        this.setState({hasUserSession: true})
       },
       (error) => {
-        const { code } = error.response.data
-        if (code === 401) {
-          alert('User not found')
-        }
-        else {
-          alert(error.response.data.description)
-        }
+        console.error(error.response.data)
       }
     )
   }
@@ -46,12 +51,20 @@ export default class App extends React.Component {
           email: user.email,
           password: user.password
         })
-        this.setState({ hasUserSession: !!UserSession.getUser() })
+        this.setState({ hasUserSession: true })
       },
       (error) => {
         console.error(error.response.data)
       }
     )
+  }
+
+  logoutLinkHandler = () => {
+    UserSession.removeUser()
+    this.setState({
+      hasUserSession: false,
+      user: this.emptyUser()
+    })
   }
 
   createLinkHandler = () => {
@@ -62,35 +75,20 @@ export default class App extends React.Component {
     this.setState({currentPage: 'Login'})
   }
 
-  logoutLinkHandler = () => {
-    UserSession.removeUser()
-    this.setState({ hasUserSession: !!UserSession.getUser() })
-  }
-
   render() {
     return (
       <div>
-        <header>
+        <Header>
           {this.renderHeaderButton()}
-        </header>
-        {this.renderBody()}
+        </Header>
+
+        <div className="container content">
+          {this.renderBody()}
+        </div>
       </div>
     )
   }
 
-  renderBody() {
-    if (this.state.hasUserSession) {
-      return <ContactsLayout />
-
-    } else {
-      return (
-        <UserLayout
-          loginHandler={this.loginHandler}
-          createHandler={this.createHandler}
-          currentPage={this.state.currentPage} />
-      )
-    }
-  }
   renderHeaderButton() {
     let buttonAction, buttonText
 
@@ -112,5 +110,19 @@ export default class App extends React.Component {
     return (
       <button onClick={buttonAction} className="btn btn-warning btn-sm">{buttonText}</button>
     )
+  }
+
+  renderBody() {
+    if (this.state.hasUserSession) {
+      return <ContactLayout />
+
+    } else {
+      return (
+        <UserLayout
+          loginHandler={this.loginHandler}
+          createHandler={this.createHandler}
+          currentPage={this.state.currentPage} />
+      )
+    }
   }
 }

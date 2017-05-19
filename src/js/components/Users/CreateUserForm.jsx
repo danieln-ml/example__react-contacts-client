@@ -1,4 +1,6 @@
 import React from "react"
+import Input from "../Inputs/Input.jsx"
+import Form from "../Base/Form.jsx"
 
 export default class CreateUserForm extends React.Component {
 
@@ -6,11 +8,13 @@ export default class CreateUserForm extends React.Component {
     const {onCreate, children} = this.props
 
     return (
-      <form onSubmit={onCreate}>
+      <section className="col-md-6 col-md-offset-3">
         <h3>Sign Up</h3>
-        {children}
-        <input type="submit" value="Create" />
-      </form>
+        <Form onSubmit={onCreate}>
+          {children}
+          <input type="submit" className="btn btn-primary pull-right" value="Create Account" />
+        </Form>
+      </section>
     )
   }
 }

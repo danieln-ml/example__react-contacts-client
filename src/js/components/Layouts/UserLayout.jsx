@@ -1,6 +1,7 @@
 import React from "react"
 import CreateUserForm from "../Users/CreateUserForm.jsx"
 import LoginUserForm from "../Users/LoginUserForm.jsx"
+import Input from "../Inputs/Input.jsx"
 
 export default class UserLayout extends React.Component {
 
@@ -11,19 +12,11 @@ export default class UserLayout extends React.Component {
     }
   }
 
-  handleInputChange = (e) => {
-    const { name, value } = e.target
-    const { user } = this.state
-    user[name] = value
-    this.setState({ user: user })
-  }
-
-  handleSubmit(fn) {
-    return (e) => {
-      fn(this.state.user)
-      e.preventDefault()
-    }
-  }
+  handleChange = (name, value) => {
+     let user = Object.assign({}, this.state.user)
+     user[name] = value
+     this.setState({ user: user })
+   }
 
   render() {
     const {user} = this.state
@@ -31,10 +24,10 @@ export default class UserLayout extends React.Component {
     const userInputs = this.renderUserInputs()
     return (
       currentPage === 'Create' ?
-        <CreateUserForm onCreate={this.handleSubmit(createHandler)}>
+        <CreateUserForm onCreate={() => createHandler(user)}>
           {userInputs}
         </CreateUserForm> :
-        <LoginUserForm onLogin={this.handleSubmit(loginHandler)}>
+        <LoginUserForm onLogin={() => loginHandler(user)}>
           {userInputs}
         </LoginUserForm>
     )
@@ -42,19 +35,19 @@ export default class UserLayout extends React.Component {
   renderUserInputs() {
     const {email, password} = this.state.user
       return [
-        <input
+        <Input
           key="Email"
           label="Email"
           type="email"
-          onChange={this.handleInputChange}
+          handleChange={this.handleChange}
           value={email}
           name="email"
           placeholder="admin@carbon.io" />,
-        <input
+        <Input
           key="Password"
           label="Password"
           type="password"
-          onChange={this.handleInputChange}
+          handleChange={this.handleChange}
           value={password}
           name="password"
           placeholder="Password" />

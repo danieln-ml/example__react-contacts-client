@@ -1,4 +1,5 @@
 import React from "react"
+import Form from "../Base/Form.jsx"
 
 export default class LoginUserForm extends React.Component {
 
@@ -6,11 +7,13 @@ export default class LoginUserForm extends React.Component {
     const {onLogin, children} = this.props
 
     return (
-      <form onSubmit={onLogin}>
+      <section className="col-md-6 col-md-offset-3">
         <h3>Sign In</h3>
-        {children}
-        <input type="submit" value="Sign In" />
-      </form>
+        <Form onSubmit={onLogin}>
+          {children}
+          <input type="submit" className="btn btn-primary pull-right" value="Sign In" />
+        </Form>
+      </section>
     )
   }
 }

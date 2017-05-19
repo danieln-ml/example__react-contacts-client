@@ -1,28 +1,40 @@
 import React from "react"
-import ContactApi from "../../services/ContactsApi.js"
 
-export default class ContactLayout extends React.Component {
+export default class ContactList extends React.Component {
+
   render() {
-    const { contacts } = this.props
-
     return (
-      <div>
-        <h2>Your Contacts</h2>
-        <ul>
-          {contacts.length ? this.renderContactItems() : this.renderEmptyContactItem()}
+      <section className={`contact-list ${this.props.className}`}>
+        <div className="contact-list-top">
+          <h3 className="contact-list-top--title">Contacts</h3>
+          { this.props.selectedContact._id &&
+            <button className="btn btn-primary btn-sm" onClick={this.props.addContactAction}>+ Add Contact</button>
+          }
+        </div>
+
+        <ul className="contact-list--list">
+          { this.props.contacts.length ?
+            this.props.contacts.map((contact) => this.renderListItem(contact))
+            :
+            <li className="contact-list--list-item m-empty">You haven't added any contacts, yet.</li>
+          }
         </ul>
-      </div>
+      </section>
     )
   }
 
-  renderContactItems() {
-    return this.props.contacts.map(contact => {
-      const {_id, firstName, lastName} = contact
-      return (<li key={_id}> {`${firstName} ${lastName}`} </li>)
-    })
-  }
-  renderEmptyContactItem() {
-    return (<li>You do not have any contacts!!!</li>)
-  }
+  renderListItem(contact) {
+    const { _id, firstName, lastName } = contact
+    const selectedId = this.props.selectedContact._id
+    const selectedClass = selectedId && selectedId === _id ? "s-selected" : ""
 
+    return (
+      <li
+        key={_id}
+        className={`contact-list--list-item ${selectedClass}`}
+        onClick={(e) => this.props.handleSelectContact(_id)}>
+        {`${firstName} ${lastName}`}
+      </li>
+    )
+  }
 }
