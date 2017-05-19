@@ -1,5 +1,7 @@
 import React from "react";
-import ContactsApi from "../services/ContactsApi"
+import Api from "../services/ContactsApi"
+import UserSession from "../services/UserSession"
+import UserLayout from "./Layouts/UserLayout.jsx"
 
 export default class App extends React.Component {
 
@@ -10,52 +12,93 @@ export default class App extends React.Component {
         password: '',
         email: ''
       },
-      userCreated: null
+      currentPage: 'Login'
     }
   }
 
-  createUser(user) {
-    ContactsApi.createUser(user).then(
-    (resp) => {
-      const createdUser = Object.assign({}, resp.data, user)
-      this.setState({
-        userCreated: JSON.stringify(createdUser)
-      })
-    },
-    (err) => {
-      alert(err)
-    })
+  loginHandler = (user) => {
+    Api.authenticateUser(user).then(
+      (response) => {
+        let { _id } = response.data
+        UserSession.setUser({
+          _id: _id,
+          email: user.email,
+          password: user.password
+        })
+        this.setState({hasUserSession: true})
+      },
+      (error) => {
+        const { code } = error.response.data
+        if (code === 401) {
+          alert('User not found')
+        }
+        else {
+          alert(error.response.data.description)
+        }
+      }
+    )
+  }
+
+  createHandler = (user) => {
+    Api.createUser(user).then(
+      (response) => {
+        let { _id } = response.data
+        UserSession.setUser({
+          _id: _id,
+          email: user.email,
+          password: user.password
+        })
+        this.setState({ hasUserSession: true })
+      },
+      (error) => {
+        console.error(error.response.data)
+      }
+    )
+  }
+
+  createLinkHandler = () => {
+    console.log('asdflj')
+    this.setState({currentPage: 'Create'})
+  }
+
+  loginLinkHandler = () => {
+    this.setState({currentPage: 'Login'})
   }
 
   render() {
+    return (
+      <div>
+        <header>
+          {this.renderHeaderButton()}
+        </header>
+        {this.renderBody()}
+      </div>
+    )
+  }
 
-    const { user, userCreated } = this.state
+  renderBody() {
+    return (
+      <UserLayout
+        loginHandler={this.loginHandler}
+        createHandler={this.createHandler}
+        currentPage={this.state.currentPage} />
+    );
+  }
+  renderHeaderButton() {
+    let buttonAction, buttonText
 
-    const handleChange = (e) => {
-      const { name, value } = e.target
-      user[name] = value
-      this.setState({ user: user })
-    }
+      if (this.state.currentPage === 'Create') {
+        buttonAction = this.loginLinkHandler
+        buttonText = "Sign In"
 
-    const handleSubmit = (e) => {
-      this.createUser(user)
-      e.preventDefault()
-    }
+      }
+      else {
+        buttonAction = this.createLinkHandler
+        buttonText = "Sign Up"
+      }
 
     return (
-      <form onSubmit={handleSubmit}>
-        { userCreated }
-        <h3>Create User</h3>
-        <div class="form-group">
-          <label>email</label>
-          <input name= "email" type="text" onChange={handleChange}/>
-        </div>
-        <div class="form-group">
-          <label>password</label>
-          <input name= "password" type="text" onChange={handleChange}/>
-        </div>
-        <button type="submit">Create</button>
-      </form>
+      <button onClick={buttonAction} className="btn btn-warning btn-sm">{buttonText}</button>
     )
   }
 }
