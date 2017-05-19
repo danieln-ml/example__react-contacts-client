@@ -11,5 +11,5 @@ const UserSession = {
     return sessionStorage.removeItem(USER_KEY)
   }
 }
-
+window.UserSession = UserSession
 export default UserSession
