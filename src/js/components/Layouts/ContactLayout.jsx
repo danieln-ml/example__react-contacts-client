@@ -79,7 +79,7 @@ export default class ContactLayout extends React.Component {
   handleCreateContact = (contact) => {
     ContactsApi.createContact(contact).then(
       (res) => {
-        let { _id } = response.data
+        let { _id } = res.data
         let newContact = Object.assign(contact, { _id: _id } )
         this.state.contacts.push(newContact)
         this.setState({

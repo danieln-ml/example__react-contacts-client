@@ -1,6 +1,6 @@
 import React from "react"
 
-export default class FormInput extends React.Component {
+export default class Input extends React.Component {
 
   handleInputChange = (e) => {
     const {value} = e.target

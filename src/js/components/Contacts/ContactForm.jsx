@@ -1,5 +1,5 @@
 import React from "react"
-import Input from "../Inputs/Input.jsx"
+import Input from "../Input"
 import CreateContactForm from "./CreateContactForm.jsx"
 import EditContactForm from "./EditContactForm.jsx"
 

@@ -1,7 +1,7 @@
 import React from "react"
 import CreateUserForm from "../Users/CreateUserForm.jsx"
 import LoginUserForm from "../Users/LoginUserForm.jsx"
-import Input from "../Inputs/Input.jsx"
+import Input from "../Input"
 
 export default class UserLayout extends React.Component {
 
