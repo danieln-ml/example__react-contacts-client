@@ -1,7 +1,9 @@
 import React from "react"
-import Input from "../Input"
-import CreateContactForm from "./CreateContactForm.jsx"
-import EditContactForm from "./EditContactForm.jsx"
+import Input from "../../Input"
+import CreateContactForm from "./CreateContactForm"
+import EditContactForm from "./EditContactForm"
+import EditContactFormContainer from '../../../containers/EditContactFormContainer'
+import CreateContactFormContainer from '../../../containers/CreateContactFormContainer'
 
 
 const DISPLAY_NAMES = {
@@ -16,8 +18,7 @@ const DISPLAY_NAMES = {
 export default class ContactForm extends React.Component {
 
   render() {
-    const { contact, className, onCreateContact, onUpdateContact, onDeleteContact } = this.props
-    // const createHandler = this.wrapSubmission(onCreateContact, contact)
+    const { contact, onCreateContact, onUpdateContact, onDeleteContact } = this.props
 
     const contactFields = contact ? Object.keys(contact) : []
     const contactInputs = (
@@ -26,25 +27,15 @@ export default class ContactForm extends React.Component {
         .map((field, index) => this.renderInput(field, index))
     )
 
-    const handleDeleteContact = (e) => {
-      onDeleteContact(contact)
-      e.preventDefault()
-    }
-
     return (
       contact._id ?
-        <EditContactForm
-          submitHandler={() => onUpdateContact(contact)}
-          deleteHandler={handleDeleteContact}
-          className="col-md-6">
+        <EditContactFormContainer>
           {contactInputs}
-        </EditContactForm>
+        </EditContactFormContainer>
         :
-        <CreateContactForm
-          submitHandler={() => onCreateContact(contact)}
-          className="col-md-6">
+        <CreateContactFormContainer>
           {contactInputs}
-        </CreateContactForm>
+        </CreateContactFormContainer>
     )
   }
 
@@ -56,7 +47,7 @@ export default class ContactForm extends React.Component {
         label={DISPLAY_NAMES[field]}
         value={this.props.contact ? this.props.contact[field] : ''}
         placeholder={DISPLAY_NAMES[field]}
-        handleChange={this.props.onChangeContact} />
+        handleChange={this.props.handleChangeContact} />
     )
   }
 }

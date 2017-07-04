@@ -1,27 +1,10 @@
-import axios from "axios"
-import UserSession from "./UserSession"
+import axios from 'axios'
+import {toSchema} from '../helpers'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
-axios.defaults.baseURL = 'http://127.0.0.1:9900'
+axios.defaults.baseURL = 'http://localhost:9900'
 
 const getAuthObject = u => ({ username: u.email, password: u.password })
-
-const toSchema = (contact) => {
-  var body = {
-    firstName: contact.firstName,
-    lastName: contact.lastName,
-    email: contact.email,
-    phoneNumbers: {
-      mobile: contact.phoneMobile,
-      work: contact.phoneWork,
-      home: contact.phoneHome
-    }
-  }
-  if (contact._id) {
-    body._id = contact._id
-  }
-  return body
-}
 
 const Api = {
   createUser: (user) => {
@@ -40,8 +23,7 @@ const Api = {
     })
   },
 
-  fetchContacts: () => {
-    const user = UserSession.getUser()
+  fetchContacts: (user) => {
     return axios({
       method: 'get',
       url: `/users/${user._id}/contacts`,
@@ -49,8 +31,7 @@ const Api = {
     })
   },
 
-  createContact: (contact) => {
-    const user = UserSession.getUser()
+  createContact: (user, contact) => {
     return axios({
       method: 'post',
       url: `/users/${user._id}/contacts`,
@@ -59,8 +40,7 @@ const Api = {
     })
   },
 
-  removeContact: (contactId) => {
-    const user = UserSession.getUser()
+  deleteContact: (user, contactId) => {
     return axios({
       method: 'delete',
       url: `/users/${user._id}/contacts/${contactId}`,
@@ -68,8 +48,7 @@ const Api = {
     })
   },
 
-  updateContact: (contact) => {
-    const user = UserSession.getUser()
+  updateContact: (user, contact) => {
     return axios({
       method: 'put',
       url: `/users/${user._id}/contacts/${contact._id}`,

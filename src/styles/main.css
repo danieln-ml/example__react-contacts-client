@@ -129,3 +129,8 @@ a {
 .contact-list--list-item:last-of-type {
   border-bottom: 1px solid #E5E5E5;
 }
+
+.alert-box {
+  margin-top: 2rem;
+  text-align: center;
+}
