@@ -1,7 +1,12 @@
 import React from "react"
-import Form from "../../Base/Form.jsx"
+import { connect } from 'react-redux'
 
-export default class EditContactForm extends React.Component {
+import { updateContact, deleteContact } from '../../actions'
+import {toSchema, toForm} from '../../helpers'
+
+import Form from "../Base/Form.jsx"
+
+export class EditContactForm extends React.Component {
 
   render() {
     const {handleUpdateContact, handleDeleteContact, children, user, contact} = this.props
@@ -33,3 +38,31 @@ export default class EditContactForm extends React.Component {
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    contact: state.contact,
+    user: state.user
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    children: ownProps.children,
+
+    handleUpdateContact: (userId, contact) => {
+      dispatch(updateContact(userId, contact))
+    },
+
+    handleDeleteContact: (userId, contactId) => {
+      dispatch(deleteContact(userId, contactId))
+    }
+  }
+}
+
+const EditContactFormContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditContactForm)
+
+export default EditContactFormContainer

@@ -1,7 +1,9 @@
 import React from "react"
-import Form from "../../Base/Form.jsx"
+import Form from "../Base/Form.jsx"
+import { connect } from 'react-redux'
+import { createContact } from '../../actions'
 
-export default class CreateContactForm extends React.Component {
+export class CreateContactForm extends React.Component {
 
   render() {
     const { user, contact, handleCreateContact, children } = this.props
@@ -26,3 +28,27 @@ export default class CreateContactForm extends React.Component {
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    contact: state.contact,
+    user: state.user
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    children: ownProps.children,
+
+    handleCreateContact: (user, contact) => {
+      dispatch(createContact(user, contact))
+    }
+  }
+}
+
+const CreateContactFormContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateContactForm)
+
+export default CreateContactFormContainer

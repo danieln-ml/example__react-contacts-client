@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import UserForm from '../components/Users/UserForm'
-import {changeUser, createUser} from '../actions'
+import UserForm from './UserForm'
+import {changeUser, createUser} from '../../actions'
 
 const mapStateToProps = state => {
   return {

@@ -1,5 +1,5 @@
 import React from "react"
-import Input from "../Input"
+import Input from "../Base/Input"
 
 export default class UserForm extends React.Component {
 

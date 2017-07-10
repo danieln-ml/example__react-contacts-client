@@ -1,9 +1,12 @@
 import React from "react"
-import Input from "../../Input"
-import CreateContactForm from "./CreateContactForm"
-import EditContactForm from "./EditContactForm"
-import EditContactFormContainer from '../../../containers/EditContactFormContainer'
-import CreateContactFormContainer from '../../../containers/CreateContactFormContainer'
+import Input from "../Base/Input"
+import { connect } from 'react-redux'
+
+import CreateContactFormContainer from "./CreateContactForm"
+import EditContactFormContainer from "./EditContactForm"
+
+import {createContact, updateContact, deleteContact, changeContact} from '../../actions'
+import {toSchema, toForm} from '../../helpers'
 
 
 const DISPLAY_NAMES = {
@@ -15,7 +18,7 @@ const DISPLAY_NAMES = {
   'phoneHome': 'Home'
 }
 
-export default class ContactForm extends React.Component {
+export class ContactForm extends React.Component {
 
   render() {
     const { contact, onCreateContact, onUpdateContact, onDeleteContact } = this.props
@@ -51,3 +54,27 @@ export default class ContactForm extends React.Component {
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    contact: state.contact
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    handleSelectContact: (contact) => {
+      dispatch(selectContact(contact))
+    },
+    handleChangeContact: (key, val) => {
+      dispatch(changeContact(key, val))
+    }
+  }
+}
+
+const ContactFormContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ContactForm)
+
+export default ContactFormContainer

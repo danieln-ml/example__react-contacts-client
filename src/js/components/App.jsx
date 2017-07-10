@@ -1,13 +1,13 @@
-import React from "react"
+import React from 'react'
+import { connect } from 'react-redux'
 
-import ContactLayout from "./Layouts/ContactLayout.jsx"
-import UserStorage from "../services/UserSession.js"
-import Api from "../services/ContactsApi"
-import HeaderContainer from '../containers/HeaderContainer'
-import LoginUserContainer from '../containers/LoginUserContainer'
-import SignupUserContainer from '../containers/SignupUserContainer'
+import ContactLayout from './Contacts'
+import HeaderContainer from './Base/Header'
+import LoginUserContainer from './Users/LoginUserContainer'
+import SignupUserContainer from './Users/SignupUserContainer'
 
-export default class App extends React.Component {
+
+export class App extends React.Component {
 
   render() {
     return (
@@ -39,3 +39,16 @@ export default class App extends React.Component {
     }
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    view: state.view,
+    error: state.error
+  };
+}
+
+const AppContainer = connect(
+  mapStateToProps
+)(App)
+
+export default AppContainer

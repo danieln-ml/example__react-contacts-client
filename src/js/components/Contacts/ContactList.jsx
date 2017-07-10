@@ -1,6 +1,8 @@
 import React from "react"
+import { connect } from 'react-redux'
+import {selectContact, addContact} from '../../actions'
 
-export default class ContactList extends React.Component {
+export class ContactList extends React.Component {
 
   render() {
     const {selectedContactId, handleAddContact, contacts} = this.props
@@ -39,3 +41,28 @@ export default class ContactList extends React.Component {
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    contacts: state.contacts,
+    selectedContactId: state.contact._id
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    handleSelectContact: (contact) => {
+      dispatch(selectContact(contact))
+    },
+    handleAddContact: () => {
+      dispatch(addContact())
+    }
+  }
+}
+
+const ContactListContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ContactList)
+
+export default ContactListContainer
