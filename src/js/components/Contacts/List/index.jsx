@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from 'react-redux'
-import {selectContact, addContact} from '../../actions'
+import {selectContact, addContact} from '../../../actions'
 
 export class ContactList extends React.Component {
 

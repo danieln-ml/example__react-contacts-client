@@ -1,6 +1,6 @@
 import React from "react"
-import ContactListContainer from "./ContactList"
-import ContactFormContainer from "./ContactForm"
+import ContactListContainer from "./List"
+import ContactFormContainer from "./Form"
 
 export default class ContactLayout extends React.Component {
 

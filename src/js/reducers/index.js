@@ -10,25 +10,25 @@ const reducer = (state = defaultState, action) => {
       // parts of the state CONTACTS -> LOGIN => LOGOUT
       const nextView = action.payload
       if (state.view === 'CONTACTS' && nextView === 'LOGIN') {
-        return {...state, view: nextView, user: emptyUser() }
+        return { ...state, view: nextView, user: emptyUser() }
       } else {
-        return {...state, view: nextView}
+        return { ...state, view: nextView }
       }
 
     // handle asyncActions
     case 'LOGIN_USER_FULFILLED':
     case 'CREATE_USER_FULFILLED':
-      newUser = {...state.user, _id: action.payload }
-      return {...state, user: newUser, view: 'CONTACTS'}
+      newUser = { ...state.user, _id: action.payload }
+      return { ...state, user: newUser, view: 'CONTACTS'}
 
     case 'CHANGE_USER':
       var newAttrs = action.payload
       newUser = Object.assign({}, state.user, action.payload)
-      return {...state, user: newUser}
+      return { ...state, user: newUser }
 
     // Contacts reducers
     case 'FETCH_CONTACTS_FULFILLED':
-      return {...state, contacts: action.payload }
+      return { ...state, contacts: action.payload }
 
     case 'CREATE_CONTACT_FULFILLED':
       newContact = action.payload
@@ -50,10 +50,10 @@ const reducer = (state = defaultState, action) => {
       }
 
     case 'ADD_CONTACT':
-      return {...state, contact: emptyContact()}
+      return { ...state, contact: emptyContact() }
 
     case 'SELECT_CONTACT':
-      return {...state, contact: action.payload}
+      return { ...state, contact: action.payload }
 
     case 'CHANGE_CONTACT':
       var updatedContact = Object.assign({}, state.contact, action.payload);
@@ -67,7 +67,7 @@ const reducer = (state = defaultState, action) => {
           return c;
         });
       }
-      return {...state, contact: updatedContact, contacts: updatedContacts}
+      return { ...state, contact: updatedContact, contacts: updatedContacts }
 
     case 'LOGIN_USER_REJECTED':
     case 'CREATE_USER_REJECTED':
@@ -75,7 +75,7 @@ const reducer = (state = defaultState, action) => {
     case 'CREATE_CONTACT_REJECTED':
     case 'UPDATE_CONTACT_REJECTED':
     case 'DELETE_CONTACT_REJECTED':
-      return {...state, error: action.payload}
+      return { ...state, error: action.payload }
 
     default:
       return state
