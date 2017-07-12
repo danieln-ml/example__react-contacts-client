@@ -4,7 +4,7 @@ import { switchView } from '../../actions'
 
 export class Header extends React.Component {
   render() {
-    const { text, nextView, dispatch } = this.props
+    const { text, nextView, email, dispatch } = this.props
     const linkClickHandler = (e) => {
       dispatch(switchView(nextView))
       e.preventDefault()
@@ -14,6 +14,7 @@ export class Header extends React.Component {
         <div className="container header--content">
           <h2 className="header--title">Contact List</h2>
           <div className="header--links">
+            <span className="header--email">{email}</span>
             <a className="btn btn-warning btn-sm" onClick={linkClickHandler}> {text} </a>
           </div>
         </div>
@@ -44,7 +45,12 @@ const getButtonText = (view) => {
 }
 
 const mapStateToProps = state => {
-  return getButtonText(state.view)
+  const buttonAction = getButtonText(state.view)
+  const email = state.view === 'CONTACTS' && state.user.email;
+  return {
+    ...buttonAction,
+    email: email
+  }
 }
 
 const HeaderContainer = connect(

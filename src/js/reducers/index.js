@@ -3,6 +3,14 @@ import {toSchema, toForm, emptyUser, emptyContact} from '../helpers'
 const reducer = (state = defaultState, action) => {
   var newUser, newContact;
 
+  // use the convention of all requests end with rejected postfix
+  if (/REJECTED$/.test(action.type)) {
+    return { ...state, error: action.payload }
+  }
+  else if (/PENDING$/.test(action.type)) {
+    return { ...state, error: null }
+  }
+
   switch (action.type) {
 
     case 'SWITCH_VIEW':
@@ -10,9 +18,18 @@ const reducer = (state = defaultState, action) => {
       // parts of the state CONTACTS -> LOGIN => LOGOUT
       const nextView = action.payload
       if (state.view === 'CONTACTS' && nextView === 'LOGIN') {
-        return { ...state, view: nextView, user: emptyUser() }
+        return {
+          ...state,
+          error: null,
+          view: nextView,
+          user: emptyUser()
+        }
       } else {
-        return { ...state, view: nextView }
+        return {
+          ...state,
+          error: null,
+          view: nextView
+        }
       }
 
     // handle asyncActions
@@ -68,14 +85,6 @@ const reducer = (state = defaultState, action) => {
         });
       }
       return { ...state, contact: updatedContact, contacts: updatedContacts }
-
-    case 'LOGIN_USER_REJECTED':
-    case 'CREATE_USER_REJECTED':
-    case 'FETCH_CONTACTS_REJECTED':
-    case 'CREATE_CONTACT_REJECTED':
-    case 'UPDATE_CONTACT_REJECTED':
-    case 'DELETE_CONTACT_REJECTED':
-      return { ...state, error: action.payload }
 
     default:
       return state
